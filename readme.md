@@ -1,24 +1,35 @@
-#Task:
-#nput:
+# Task : 
+Write simple HTTP Rest API with provided functionality.
+# Input:
 HTTP Rest API with several endpoints based on Python 3.9 Aiohttp async web framework.
 Every user of this application can book COUPON for a single EVENT. One COUPON = one EVENT.
-Models:
-PERSON:
+# Models:
+
+`PERSON`:
+
 name
 surname
 token
-EVENT:
+
+
+`EVENT`:
+
 remain
 title
 description
 price
 date
-COUPON:
+
+`COUPON`:
+
 event
 user
 hash
-Comments:
-Please, use:
+
+`Comments`:
+
+# Please, use:
+
 Access-Token for route safety
 JWT or similar token-based user authentication
 Pydantic for schema validation
