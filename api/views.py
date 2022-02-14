@@ -74,6 +74,8 @@ async def registration(request):
         {'id': new_user.id, 'username': username}, dumps=pretty_json, status=201)
 
 
+
+
 @docs(tags=["Events"],
       summary="Return all user's Events.",
       description="Accept GET request and return Events.")
@@ -84,61 +86,15 @@ async def events_list(request):
     return web.json_response({'events': events}, dumps=pretty_json)
 
 
+@docs(tags=["Event Coupon"],
+      summary=".",
+      description=".")
+@login_required
+async def events_list(request):
+    db_session = DBSession()
+    events = db_session.query(Event).all()
+
+    return web.json_response({'events': events}, dumps=pretty_json)
 
 
 
-
-
-# @docs(tags=["Jokes"],
-#       summary="Update joke by ID.",
-#       description="Accept PATCH request for joke and update joke's text.")
-# @request_schema(JokeRequestSchema(strict=True))
-# @response_schema(JokeResponseSchema(), 200)
-# @login_required
-# async def joke_update(request):
-#     joke_id = int(request.match_info['id'])
-#     data = request["data"]
-#     new_text = data["text"]
-
-#     joke = await Joke.get(joke_id)
-
-#     if joke is None:
-#         raise web.HTTPNotFound()
-#     if not joke.is_joke_owner(request.user):
-#         return web.json_response(
-#             {"Error": "This is not your joke."}, dumps=pretty_json, status=403)
-
-#     await joke.update(text=new_text).apply()
-
-#     joke_schema = JokeResponseSchema()
-#     joke_json, errors = joke_schema.dump(joke)
-
-#     return web.json_response(joke_json, dumps=pretty_json)
-
-
-# @docs(tags=['Jokes'],
-#       summary='Delete joke by ID.',
-#       description='Accept DELETE request for joke and delete it.')
-# @response_schema(DeleteJokeResponseSchema(), code=204)
-# @login_required
-# async def joke_delete(request):
-#     """
-#     I dont know why, but this endpoint return nothing, if everything ok.
-#     Its raise exception Response <type of response> not prepared.
-#     Also other web.json_responses responses correctly.
-#     I've tried other aiohttp versions, without result.
-#     I think its aiohttp bug.
-#     ¯\_(ツ)_/¯
-#     """
-#     joke_id = int(request.match_info['id'])
-#     joke = await Joke.get(joke_id)
-#     if joke is None:
-#         raise web.HTTPNotFound()
-#     if not joke.is_joke_owner(request.user):
-#         return web.json_response(
-#             {'Error': 'This is not your joke.'}, dumps=pretty_json, status=403)
-
-#     await joke.delete()
-
-#     return web.json_response(
-#         {'Message': 'Successfuly deleted'}, dumps=pretty_json, status=204)
