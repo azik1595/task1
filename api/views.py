@@ -7,7 +7,7 @@ from api.models import Persons,Event,Coupon
 from aiohttp import web, ClientSession
 import jwt
 from api.schemas import (
-     UserRegistrationRequestSchema,UserRegistrationResponseSchema,
+     EventCouponSchema, UserRegistrationRequestSchema,UserRegistrationResponseSchema,
     UserLoginRequestSchema, UserLoginResponseSchema)
 from api.validator import AuthRequestSchema
 from app import DBSession
@@ -89,12 +89,23 @@ async def events_list(request):
 @docs(tags=["Event Coupon"],
       summary=".",
       description=".")
+@request_schema(EventCouponSchema)
 @login_required
-async def events_list(request):
+async def events_new(request):
     db_session = DBSession()
-    events = db_session.query(Event).all()
+    jwt_token = request.headers.get('Authorization', None)
+    payload = jwt.decode(
+                jwt_token, config["DEFAULT"]['JWT_SECRET'], algorithms= [config["DEFAULT"]['JWT_ALGORITHM']])
+    data =  await request.json()
+    event_id = data["event_id"]
+    user_id =  payload['user_id']
+    hash =  jwt_token    
+    new_coupon = Coupon(event_id = event_id,user_id = user_id,hash = hash)
+    async with aiohttp.ClientSession():
+            db_session.add(new_coupon)
+            db_session.commit()
 
-    return web.json_response({'events': events}, dumps=pretty_json)
+    return web.json_response(new_coupon, dumps=pretty_json)
 
 
 

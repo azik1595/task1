@@ -41,3 +41,8 @@ class UserRegistrationResponseSchema(Schema):
 
     class Meta:
         ordered = True
+
+        
+class EventCouponSchema(Schema):
+    event_id = fields.Int(required=True)
+ 
